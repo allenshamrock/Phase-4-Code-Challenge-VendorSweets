@@ -43,7 +43,7 @@ class Vendor(db.Model, SerializerMixin):
         'vendor_sweets', 'sweet', creator=lambda sweet_obj: VendorSweet(sweet=sweet_obj))
     
     # Add serialization
-    serialize_only=('id','name')
+    serialize_rules=('-vendorsweet.vendor',)
     
     def __repr__(self):
         return f'<Vendor {self.id}>'

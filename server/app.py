@@ -23,6 +23,29 @@ db.init_app(app)
 def home():
     return '<h1>Code Challenge</h1>'
 
+class Vendors(Resource):
+    def get(self):
+        vendors = [
+            {"id":vendor.id, "name":vendor.name} for vendor in Vendor.query.all() 
+            ]
+        response = make_response( vendors,200)
+        return response
+    
+class VendorsById(Resource):
+    def get(self,id):
+        vendor = Vendor.query.filter(Vendor.id == id).first()
+        if vendor:
+            response  = make_response(vendor.to_dict(),200)
+            return response
+        response = make_response({"error": "Vendor not found"}, 404)
+        return response
+    
+
+        
+
+
+            
+        
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
