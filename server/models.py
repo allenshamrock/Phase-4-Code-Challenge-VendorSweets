@@ -20,6 +20,8 @@ class Sweet(db.Model, SerializerMixin):
     # Add relationship
     vendorsweet = db.relationship(
         'VendorSweet', back_populates='sweet', cascade="all, delete-orphan")
+    vendors = association_proxy(
+        'vendor_sweets', 'vendor', creator=lambda vendor_obj: VendorSweet(vendor=vendor_obj))
     
     # Add serialization
     serialize_only = ('id', 'name')
@@ -52,10 +54,13 @@ class VendorSweet(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key=True)
     price = db.Column(db.Integer, nullable=False)
+    
 
     # Add relationships
     sweet = db.relationship('Sweet', back_populates = 'vendorsweet')
     vendor = db.relationship('Vendor', back_populates = 'vendorsweet')
+    sweet_id = db.Column(db.Integer, db.ForeignKey('sweets.id'))
+    vendor_id = db.Column(db.Integer, db.ForeignKey('vendors.id'))
     
     # Add serialization
     serialize_rules = ('-sweet.vendorsweet', '-vendor.vendorsweet')
